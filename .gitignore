@@ -12,3 +12,4 @@ _ReSharper.*
 ~$*
 src/packages
 /wraps/_*
+*.wrap

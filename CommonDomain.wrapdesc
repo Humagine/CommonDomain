@@ -1,6 +1,7 @@
 ﻿name: CommonDomain
+build: msbuild;profile=net40
 depends: openwrap anchored content
 assembly-info: assembly-version
 assembly-info: file-version
 assembly-info: assembly-info
-depends: eventstore ~> 3.0
+depends: eventstore

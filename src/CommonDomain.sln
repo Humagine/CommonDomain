@@ -45,4 +45,7 @@ Global
 		{75C8F482-B38D-428C-AD67-890B40E35A63} = {06FD3DEE-6B33-408C-AFE4-6FADE5525AB0}
 		{F489D9D1-F275-4018-A86F-D84352BCD4E9} = {06FD3DEE-6B33-408C-AFE4-6FADE5525AB0}
 	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+		OpenWrap.VisualStudioIntegration2010 = 1;Ensures OpenWrap initialization when a solution is opened.;OpenWrap Visual Studio Solution Add-in
+	EndGlobalSection
 EndGlobal
