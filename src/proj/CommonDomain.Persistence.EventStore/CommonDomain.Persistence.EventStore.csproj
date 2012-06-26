@@ -79,8 +79,5 @@
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="..\..\..\wraps\openwrap\build\OpenWrap.CSharp.targets" />
 </Project>
