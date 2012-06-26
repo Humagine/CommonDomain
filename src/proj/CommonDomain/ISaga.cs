@@ -1,7 +1,7 @@
 namespace CommonDomain
 {
 	using System;
-	using System.Collections;
+	using System.Collections.Generic;
 
 	public interface ISaga
 	{
@@ -10,10 +10,10 @@ namespace CommonDomain
 
 		void Transition(object message);
 
-		ICollection GetUncommittedEvents();
+		IEnumerable<object> GetUncommittedEvents();
 		void ClearUncommittedEvents();
 
-		ICollection GetUndispatchedMessages();
+		IEnumerable<object> GetUndispatchedMessages();
 		void ClearUndispatchedMessages();
 	}
 }

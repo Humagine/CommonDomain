@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "proj", "proj", "{06FD3DEE-6B33-408C-AFE4-6FADE5525AB0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{092DA80E-4854-41FD-91F7-D996F41419F2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonDomain", "proj\CommonDomain\CommonDomain.csproj", "{E07187E1-EEE1-44DF-996A-C4733F327BDC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonDomain.Core", "proj\CommonDomain.Core\CommonDomain.Core.csproj", "{51C99F4D-CCF0-431A-B37C-D620EF1DF37B}"

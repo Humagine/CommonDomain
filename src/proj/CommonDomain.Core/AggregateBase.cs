@@ -1,93 +1,96 @@
 namespace CommonDomain.Core
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
+	using System;
+	using System.Collections.Generic;
+	using Routing;
 
-    public abstract class AggregateBase : IAggregate, IEquatable<IAggregate>
-    {
-        private readonly ICollection<object> uncommittedEvents = new LinkedList<object>();
+	public abstract class AggregateBase : IAggregate, IEquatable<IAggregate>
+	{
+		private readonly IList<object> uncommittedEvents = new List<object>();
+		private IRouteEvents registeredRoutes;
 
-        private IRouteEvents registeredRoutes;
+		public Guid Id { get; protected set; }
+		public int Version { get; protected set; }
 
-        protected AggregateBase()
-            : this(null)
-        {
-        }
+		protected AggregateBase(IRouteEvents handler)
+		{
+			RegisteredRoutes = handler ?? new ConventionEventRouter(true, this);
+			RegisteredRoutes.Register(this);
+		}
 
-        protected AggregateBase(IRouteEvents handler)
-        {
-            if (handler == null) return;
+		protected IRouteEvents RegisteredRoutes
+		{
+			get { return registeredRoutes; }
+			set
+			{
+				if (value == null)
+				{
+					throw new InvalidOperationException("AggregateBase must have an event router to function");
+				}
 
-            this.RegisteredRoutes = handler;
-            this.RegisteredRoutes.Register(this);
-        }
+				registeredRoutes = value;
+			}
+		}
 
-        public Guid Id { get; protected set; }
-        public int Version { get; protected set; }
+		protected void Register<T>(Action<T> route)
+		{
+			RegisteredRoutes.Register(route);
+		}
 
-        protected IRouteEvents RegisteredRoutes
-        {
-            get
-            {
-                return registeredRoutes ?? (registeredRoutes = new ConventionEventRouter(true, this));
-            }
-            set
-            {
-                if (value == null)
-                    throw new InvalidOperationException("AggregateBase must have an event router to function");
+		protected void RaiseEvent(object @event)
+		{
+			((IAggregate) this).ApplyEvent(@event);
+			uncommittedEvents.Add(@event);
+		}
 
-                registeredRoutes = value;
-            }
-        }
+		protected virtual IMemento GetSnapshot()
+		{
+			return null;
+		}
 
-        protected void Register<T>(Action<T> route)
-        {
-            this.RegisteredRoutes.Register(route);
-        }
+		void IAggregate.ApplyEvent(object @event)
+		{
+			RegisteredRoutes.Dispatch(@event);
+			Version++;
+		}
 
-        protected void RaiseEvent(object @event)
-        {
-            ((IAggregate)this).ApplyEvent(@event);
-            this.uncommittedEvents.Add(@event);
-        }
-        void IAggregate.ApplyEvent(object @event)
-        {
-            this.RegisteredRoutes.Dispatch(@event);
-            this.Version++;
-        }
-        ICollection IAggregate.GetUncommittedEvents()
-        {
-            return (ICollection)this.uncommittedEvents;
-        }
-        void IAggregate.ClearUncommittedEvents()
-        {
-            this.uncommittedEvents.Clear();
-        }
+		IEnumerable<object> IAggregate.GetUncommittedEvents()
+		{
+			return uncommittedEvents;
+		}
 
-        IMemento IAggregate.GetSnapshot()
-        {
-            var snapshot = this.GetSnapshot();
-            snapshot.Id = this.Id;
-            snapshot.Version = this.Version;
-            return snapshot;
-        }
-        protected virtual IMemento GetSnapshot()
-        {
-            return null;
-        }
+		void IAggregate.ClearUncommittedEvents()
+		{
+			uncommittedEvents.Clear();
+		}
 
-        public override int GetHashCode()
-        {
-            return this.Id.GetHashCode();
-        }
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj as IAggregate);
-        }
-        public virtual bool Equals(IAggregate other)
-        {
-            return null != other && other.Id == this.Id;
-        }
-    }
+		IMemento IAggregate.GetSnapshot()
+		{
+			var snapshot = GetSnapshot();
+
+			if (snapshot == null)
+			{
+				return null;
+			}
+
+			snapshot.Id = Id;
+			snapshot.Version = Version;
+			return snapshot;
+		}
+
+		public override int GetHashCode()
+		{
+			return Id.GetHashCode();
+		}
+
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as IAggregate);
+		}
+
+		public virtual bool Equals(IAggregate other)
+		{
+			return null != other && other.Id == Id;
+		}
+	}
 }

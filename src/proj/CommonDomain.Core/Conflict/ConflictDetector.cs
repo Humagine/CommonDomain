@@ -1,7 +1,6 @@
-namespace CommonDomain.Core
+namespace CommonDomain.Core.Conflict
 {
 	using System;
-	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
 
@@ -24,24 +23,25 @@ namespace CommonDomain.Core
 			where TCommitted : class
 		{
 			IDictionary<Type, ConflictDelegate> inner;
-			if (!this.actions.TryGetValue(typeof(TUncommitted), out inner))
-				this.actions[typeof(TUncommitted)] = inner = new Dictionary<Type, ConflictDelegate>();
+			if (!actions.TryGetValue(typeof (TUncommitted), out inner))
+				actions[typeof (TUncommitted)] = inner = new Dictionary<Type, ConflictDelegate>();
 
-			inner[typeof(TCommitted)] = (uncommitted, committed) =>
-				handler(uncommitted as TUncommitted, committed as TCommitted);
+			inner[typeof (TCommitted)] = (uncommitted, committed) =>
+			                             handler(uncommitted as TUncommitted, committed as TCommitted);
 		}
 
 		public bool ConflictsWith(IEnumerable<object> uncommittedEvents, IEnumerable<object> committedEvents)
 		{
 			return (from object uncommitted in uncommittedEvents
-					from object committed in committedEvents
-					where this.Conflicts(uncommitted, committed)
-					select uncommittedEvents).Any();
+			        from object committed in committedEvents
+			        where Conflicts(uncommitted, committed)
+			        select uncommittedEvents).Any();
 		}
+
 		private bool Conflicts(object uncommitted, object committed)
 		{
 			IDictionary<Type, ConflictDelegate> registration;
-			if (!this.actions.TryGetValue(uncommitted.GetType(), out registration))
+			if (!actions.TryGetValue(uncommitted.GetType(), out registration))
 				return uncommitted.GetType() == committed.GetType(); // no reg, only conflict if the events are the same time
 
 			ConflictDelegate callback;

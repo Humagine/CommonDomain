@@ -42,12 +42,12 @@
       <Link>Properties\GlobalSuppressions.cs</Link>
     </Compile>
     <Compile Include="AggregateBase.cs" />
-    <Compile Include="ConflictDetector.cs" />
-    <Compile Include="ConventionEventRouter.cs" />
+    <Compile Include="Conflict\ConflictDetector.cs" />
+    <Compile Include="Routing\ConventionEventRouter.cs" />
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="HandlerForDomainEventNotFoundException.cs" />
+    <Compile Include="Exceptions\HandlerForDomainEventNotFoundException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegistrationEventRouter.cs" />
+    <Compile Include="Routing\RegistrationEventRouter.cs" />
     <Compile Include="SagaBase.cs" />
   </ItemGroup>
   <ItemGroup>

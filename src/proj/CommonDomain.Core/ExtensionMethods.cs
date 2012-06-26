@@ -1,6 +1,7 @@
 namespace CommonDomain.Core
 {
 	using System.Globalization;
+	using Exceptions;
 
 	internal static class ExtensionMethods
 	{
